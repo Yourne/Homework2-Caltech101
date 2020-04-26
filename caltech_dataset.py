@@ -15,7 +15,17 @@ def pil_loader(path):
 
 
 def make_dataset(root, class_to_idx, split):
-    
+    instances = []
+    parent_dir, _ = os.path.split(root)
+    split_path =  os.path.join(parent_dir, split)
+    with open(split_path) as f:
+        for line in f:
+            target_class, _ = os.path.split(line.strip('\n'))
+            class_index = class_to_idx[target_class]
+            path = os.path.join(root, line.strip('\n'))
+            item = path, class_index
+            instances.append(item)
+            
     
 class Caltech(VisionDataset): # root = 101_ObjectCategories
     def __init__(self, root, split='train', transform=None, target_transform=None):
@@ -81,9 +91,6 @@ class Caltech(VisionDataset): # root = 101_ObjectCategories
         return image, label
 
     def __len__(self):
-        '''
-        The __len__ method returns the length of the dataset
-        It is mandatory, as this is used by several other components
-        '''
+  
         length = len(self.samples)
         return length
