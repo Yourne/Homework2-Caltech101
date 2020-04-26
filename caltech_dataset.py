@@ -16,6 +16,8 @@ def pil_loader(path):
 
 
 def make_dataset(root, class_to_idx, split):
+    ext = '.txt'
+    split = split + ext
     instances = []
     parent_dir, _ = os.path.split(root)
     split_path =  os.path.join(parent_dir, split)
