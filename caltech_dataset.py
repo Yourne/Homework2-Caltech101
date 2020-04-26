@@ -25,7 +25,7 @@ def make_dataset(root, class_to_idx, split):
     with open(split_path) as f:
         for line in f:
             target_class, _ = os.path.split(line.strip('\n'))
-            if target_class not in banned_class:
+            if target_class not in banned_classes:
                 class_index = class_to_idx[target_class]
                 path = os.path.join(root, line.strip('\n'))
                 item = path, class_index
