@@ -32,7 +32,7 @@ def make_dataset(root, class_to_idx, split):
     return instances
             
     
-class Caltech(VisionDataset): # root = 101_ObjectCategories
+class Caltech(VisionDataset):
     def __init__(self, root, split='train', transform=None, target_transform=None):
         super(Caltech, self).__init__(root, transform=transform, target_transform=target_transform)
 
