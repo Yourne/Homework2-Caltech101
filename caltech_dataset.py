@@ -79,7 +79,7 @@ class Caltech(VisionDataset): # root = 101_ObjectCategories
             tuple: (sample, target) where target is class_index of the target class.
         '''
 
-        image, label = self.sample[index]
+        image, label = self.samples[index]
         image = pil_loader(image)
 
         # Applies preprocessing when accessing the image
