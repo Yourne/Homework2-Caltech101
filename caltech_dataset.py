@@ -14,13 +14,15 @@ def pil_loader(path):
         return img.convert('RGB')
 
 
-class Caltech(VisionDataset):
+def make_dataset(root, class_to_idx, split):
+    
+    
+class Caltech(VisionDataset): # root = 101_ObjectCategories
     def __init__(self, root, split='train', transform=None, target_transform=None):
         super(Caltech, self).__init__(root, transform=transform, target_transform=target_transform)
 
         self.split = split # This defines the split you are going to use
                            # (split files are called 'train.txt' and 'test.txt')
-
         '''
         - Here you should implement the logic for reading the splits files and accessing elements
         - If the RAM size allows it, it is faster to store all data in memory
@@ -29,6 +31,33 @@ class Caltech(VisionDataset):
           through the index
         - Labels should start from 0, so for Caltech you will have lables 0...100 (excluding the background class) 
         '''
+        
+        classes, class_to_idx = self._find_classes(self.root)
+        samples = make_dataset(self.root, self.split)
+        
+        self.classes = classes
+        self.class_to_idx = class_to_idx
+        self.samples = samples
+        self.targets = [s[1] for s in samples]
+        
+    def _find_classes(self, dir):
+        """
+        Finds the class folders in a dataset.
+
+        Args:
+            dir (string): Root directory path.
+
+        Returns:
+            tuple: (classes, class_to_idx) where classes are relative to (dir), and class_to_idx is a dictionary.
+
+        Ensures:
+            No class is a subdirectory of another.
+        """
+        classes = [d.name for d in os.scandir(dir) if d.is_dir()]
+        classes.sort()
+        class_to_idx = {classes[i]: i for i in range(len(classes))}
+        return classes, class_to_idx
+
 
     def __getitem__(self, index):
         '''
@@ -39,8 +68,9 @@ class Caltech(VisionDataset):
         Returns:
             tuple: (sample, target) where target is class_index of the target class.
         '''
+        image, label = 
 
-        image, label = ... # Provide a way to access image and label via index
+        #image, label = ... # Provide a way to access image and label via index
                            # Image should be a PIL Image
                            # label can be int
 
@@ -55,5 +85,5 @@ class Caltech(VisionDataset):
         The __len__ method returns the length of the dataset
         It is mandatory, as this is used by several other components
         '''
-        length = ... # Provide a way to get the length (number of elements) of the dataset
+        length = len(self.samples)
         return length
