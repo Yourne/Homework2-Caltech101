@@ -6,6 +6,7 @@ import os
 import os.path
 import sys
 
+banned_classes = ['BACKGROUND_Google']
 
 def pil_loader(path):
     # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
@@ -18,13 +19,17 @@ def make_dataset(root, class_to_idx, split):
     instances = []
     parent_dir, _ = os.path.split(root)
     split_path =  os.path.join(parent_dir, split)
+    
     with open(split_path) as f:
         for line in f:
             target_class, _ = os.path.split(line.strip('\n'))
-            class_index = class_to_idx[target_class]
-            path = os.path.join(root, line.strip('\n'))
-            item = path, class_index
-            instances.append(item)
+            if target_class not in banned_class:
+                class_index = class_to_idx[target_class]
+                path = os.path.join(root, line.strip('\n'))
+                item = path, class_index
+                instances.append(item)
+     
+    return instances
             
     
 class Caltech(VisionDataset): # root = 101_ObjectCategories
@@ -33,17 +38,12 @@ class Caltech(VisionDataset): # root = 101_ObjectCategories
 
         self.split = split # This defines the split you are going to use
                            # (split files are called 'train.txt' and 'test.txt')
-        '''
-        - Here you should implement the logic for reading the splits files and accessing elements
-        - If the RAM size allows it, it is faster to store all data in memory
-        - PyTorch Dataset classes use indexes to read elements
-        - You should provide a way for the __getitem__ method to access the image-label pair
-          through the index
-        - Labels should start from 0, so for Caltech you will have lables 0...100 (excluding the background class) 
-        '''
         
         classes, class_to_idx = self._find_classes(self.root)
-        samples = make_dataset(self.root, self.split)
+        samples = make_dataset(self.root, class_to_idx, self.split)
+        
+        if len(samples) == 0:
+            raise (RuntimeError("Found 0 files in subfolders of: " + self.root))
         
         self.classes = classes
         self.class_to_idx = class_to_idx
@@ -63,7 +63,7 @@ class Caltech(VisionDataset): # root = 101_ObjectCategories
         Ensures:
             No class is a subdirectory of another.
         """
-        classes = [d.name for d in os.scandir(dir) if d.is_dir()]
+        classes = [d.name for d in os.scandir(dir) if (d.is_dir() and (d.name not in banned_classes))]
         classes.sort()
         class_to_idx = {classes[i]: i for i in range(len(classes))}
         return classes, class_to_idx
@@ -78,11 +78,9 @@ class Caltech(VisionDataset): # root = 101_ObjectCategories
         Returns:
             tuple: (sample, target) where target is class_index of the target class.
         '''
-        image, label = 
 
-        #image, label = ... # Provide a way to access image and label via index
-                           # Image should be a PIL Image
-                           # label can be int
+        image, label = self.sample[index]
+        image = pil_loader(image)
 
         # Applies preprocessing when accessing the image
         if self.transform is not None:
