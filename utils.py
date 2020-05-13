@@ -1,7 +1,7 @@
 import os.path
 import json
 
-def upload(file, params, values):
+def upload_model_results(file, params, values):
     """
     args: 
     file = a json file name in the current directory
