@@ -5,7 +5,7 @@ from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,AutoMinorLoca
 import numpy as np
 
 
-def upload(file, params, train_scores, val_scores):
+def upload_model_results(file, params, train_scores, val_scores):
     """
     args: 
     file = a json file name in the current directory
