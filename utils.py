@@ -43,6 +43,7 @@ def plot_model_results(file, score_label='loss', index=-1):
     train_scores = data[index][1]
     val_scores = data[index][2]
     epochs = len(data[index][1])
+    title = data[index][0]
     
     fig, ax = plt.subplots()
     ax.plot(range(epochs), train_scores, marker='.', label='train')
@@ -54,4 +55,5 @@ def plot_model_results(file, score_label='loss', index=-1):
     ax.set_xlabel('epochs')
     ax.set_ylabel(score_label)
     ax.grid()
+    ax.set_title(title)
     fig.legend()
