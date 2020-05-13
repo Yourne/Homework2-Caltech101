@@ -51,9 +51,10 @@ def plot_model_results(file, score_label='loss', index=-1):
     ax.xaxis.set_major_locator(MultipleLocator(5))
     ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
     ax.xaxis.set_minor_locator(MultipleLocator(1))
-    ax.set_yticks(np.arange(0, 1.2, 0.2))
+    if score_label == 'accuracy':
+        ax.set_yticks(np.arange(0, 1.2, 0.2))
     ax.set_xlabel('epochs')
     ax.set_ylabel(score_label)
     ax.grid()
     ax.set_title(title)
-    fig.legend()
+    ax.legend(loc='upper right')
