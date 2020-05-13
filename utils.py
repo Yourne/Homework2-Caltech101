@@ -1,14 +1,15 @@
 import os.path
 import json
 
-def upload_model_results(file, params, values):
+def upload(file, params, train_scores, val_scores):
     """
     args: 
     file = a json file name in the current directory
     params: a list of hyperparams of a model
-    values: a list of performance values for the given hyperparams
+    train_scores: a list of performance values over the train dataset
+    val_scores: a list of performance values over the train dataset
     """
-    item = [params, values]
+    item = [params, train_scores, val_scores]
     
     if os.path.isfile(file):
         
